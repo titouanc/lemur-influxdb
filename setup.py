@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 install_requires = [
     'lemur',
-    'influxdb'
+    'influxdb==4.1.0'
 ]
 
 setup(
