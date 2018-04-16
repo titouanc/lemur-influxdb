@@ -24,17 +24,16 @@ class InfluxDBMetricPlugin(MetricPlugin):
 
     def __init__(self, *args, **kwargs):
         cfg = current_app.config
-        host = cfg.get('INFLUXDB_HOST', 'localhost')
-        port = cfg.get('INFLUXDB_PORT', 8086)
-        udp = cfg.get('INFLUXDB_UDP', False)
-        database = cfg.get('INFLUXDB_DATABASE', 'lemur')
+        opts = {
+            'host': cfg.get('INFLUXDB_HOST', 'localhost'),
+            'use_udp': cfg.get('INFLUXDB_UDP', False),
+            'database': cfg.get('INFLUXDB_DATABASE', 'lemur'),
+        }
 
-        if udp:
-            self.client = InfluxDBClient(host=host, udp_port=port,
-                                         use_udp=True, database=database)
-        else:
-            self.client = InfluxDBClient(host=host, port=port,
-                                         database=database)
+        port = cfg.get('INFLUXDB_PORT', 8086)
+        opts['udp_port' if opts['use_udp'] else 'port'] = port
+
+        self.client = InfluxDBClient(**opts)
         super(InfluxDBMetricPlugin, self).__init__(*args, **kwargs)
 
     def submit(self, metric_name, metric_type, metric_value, metric_tags=None, options=None):
@@ -58,6 +57,6 @@ class InfluxDBMetricPlugin(MetricPlugin):
             'time': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
             'fields': {'value': metric_value},
         }]
-        print(payload)
+        current_app.logger.debug("Sending %s", payload)
         self.client.write_points(payload)
 
