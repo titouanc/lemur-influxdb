@@ -1,11 +1,11 @@
 # lemur-influxdb
 
-InfluxDB metric plugin for Lemur.
+[InfluxDB](https://www.influxdata.com/) metric plugin for [Lemur](https://github.com/netflix/lemur).
 
 ## Installation
 
 ```
-pip insall -e git+https://github.com/titouanc/lemur-influxdb
+pip install -e git+https://github.com/titouanc/lemur-influxdb#egg=lemur-influxdb
 ```
 
 ## Configuration
@@ -24,4 +24,4 @@ INFLUXDB_DATABASE = "lemur"  # Name of the database for lemur's metrics
 ```
 
 If any of the `INFLUX_*` variable is not set, it will use default
-values. The declarations above are the default values
+values. The declarations above show the default values.
